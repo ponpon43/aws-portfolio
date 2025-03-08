@@ -1,0 +1,27 @@
+name: Upload to S3
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::249154813184:role/oidc-role-for-github
+          aws-region: us-east-1
+      - name: Upload to S3
+        run: |
+          aws s3 cp index.html s3://website-kato-20250222/index.html
+          aws s3 cp style.css s3://website-kato-20250222/style.css
